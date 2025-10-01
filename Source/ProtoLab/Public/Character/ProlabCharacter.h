@@ -8,6 +8,7 @@
 
 class USpringArmComponent;
 class UCameraComponent;
+class UPlayerLocomotion;
 
 UCLASS()
 class PROTOLAB_API AProlabCharacter : public ACharacter
@@ -22,17 +23,19 @@ public:
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
 protected:
-	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
 private:
-#pragma region MyRegion
+#pragma region Components
 
 	UPROPERTY(VisibleAnywhere)
 	USpringArmComponent* SpringArm = nullptr;
 
 	UPROPERTY(VisibleAnywhere)
 	UCameraComponent* ViewCamera = nullptr;
+
+	UPROPERTY(VisibleAnywhere)
+	UPlayerLocomotion* PlayerLocomotion = nullptr;
 
 #pragma endregion
 
