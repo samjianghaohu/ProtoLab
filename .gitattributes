@@ -1,2 +1,5 @@
 # Auto detect text files and perform LF normalization
 * text=auto
+
+Content/Characters/** filter=lfs diff=lfs merge=lfs -text
+Content/LevelPrototyping/** filter=lfs diff=lfs merge=lfs -text
