@@ -9,6 +9,7 @@
 class USpringArmComponent;
 class UCameraComponent;
 class UPlayerLocomotion;
+class UInputMappingContext;
 
 UCLASS()
 class PROTOLAB_API AProlabCharacter : public ACharacter
@@ -24,6 +25,9 @@ public:
 
 protected:
 	virtual void BeginPlay() override;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input)
+	UInputMappingContext* CharacterMappingContext = nullptr;
 
 private:
 #pragma region Components

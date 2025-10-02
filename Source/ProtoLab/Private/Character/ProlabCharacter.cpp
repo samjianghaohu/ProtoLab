@@ -5,6 +5,7 @@
 #include "GameFramework/SpringArmComponent.h"
 #include "Camera/CameraComponent.h"
 #include "Character/PlayerLocomotion.h"
+#include "EnhancedInputSubsystems.h"
 
 AProlabCharacter::AProlabCharacter()
 {
@@ -21,12 +22,25 @@ AProlabCharacter::AProlabCharacter()
 
 	// Create player related components
 	PlayerLocomotion = CreateDefaultSubobject<UPlayerLocomotion>(TEXT("PlayerLocomotion"));
+
+	AutoPossessPlayer = EAutoReceiveInput::Player0;
 }
 
 void AProlabCharacter::BeginPlay()
 {
 	Super::BeginPlay();
-	
+
+	if (APlayerController* PlayerController = Cast<APlayerController>(GetController()))
+	{
+		if (UEnhancedInputLocalPlayerSubsystem* Subsystem = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(PlayerController->GetLocalPlayer()))
+		{
+			if (GEngine)
+			{
+				GEngine->AddOnScreenDebugMessage(1, 5.f, FColor::Yellow, TEXT("Add mapping context"));
+			}
+			Subsystem->AddMappingContext(CharacterMappingContext, 0);
+		}
+	}
 }
 
 void AProlabCharacter::Tick(float DeltaTime)
@@ -39,5 +53,10 @@ void AProlabCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCom
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
 
+	// Locomotion related input are handled by PlayerLocomotion component
+	if (PlayerLocomotion != nullptr)
+	{
+		PlayerLocomotion->SetupPlayerInputComponent(PlayerInputComponent);
+	}
 }
 
