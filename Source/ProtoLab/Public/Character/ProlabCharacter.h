@@ -6,10 +6,7 @@
 #include "GameFramework/Character.h"
 #include "ProlabCharacter.generated.h"
 
-class USpringArmComponent;
-class UCameraComponent;
 class UPlayerLocomotion;
-class UInputMappingContext;
 
 UCLASS()
 class PROTOLAB_API AProlabCharacter : public ACharacter
@@ -27,16 +24,16 @@ protected:
 	virtual void BeginPlay() override;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input)
-	UInputMappingContext* CharacterMappingContext = nullptr;
+	class UInputMappingContext* CharacterMappingContext = nullptr;
 
 private:
 #pragma region Components
 
 	UPROPERTY(VisibleAnywhere)
-	USpringArmComponent* SpringArm = nullptr;
+	class USpringArmComponent* SpringArm = nullptr;
 
 	UPROPERTY(VisibleAnywhere)
-	UCameraComponent* ViewCamera = nullptr;
+	class UCameraComponent* ViewCamera = nullptr;
 
 	UPROPERTY(VisibleAnywhere)
 	UPlayerLocomotion* PlayerLocomotion = nullptr;

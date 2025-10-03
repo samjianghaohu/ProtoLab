@@ -39,8 +39,6 @@ void UPlayerLocomotion::BeginPlay()
 void UPlayerLocomotion::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
-
-	// ...
 }
 
 #pragma region Locomotion Input

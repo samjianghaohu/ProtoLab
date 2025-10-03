@@ -9,12 +9,12 @@
 class UInputAction;
 struct FInputActionValue;
 
-UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
+UCLASS(ClassGroup = (Custom), meta = (BlueprintSpawnableComponent))
 class PROTOLAB_API UPlayerLocomotion : public UActorComponent
 {
 	GENERATED_BODY()
 
-public:	
+public:
 	UPlayerLocomotion();
 
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;

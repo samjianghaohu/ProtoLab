@@ -34,10 +34,6 @@ void AProlabCharacter::BeginPlay()
 	{
 		if (UEnhancedInputLocalPlayerSubsystem* Subsystem = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(PlayerController->GetLocalPlayer()))
 		{
-			if (GEngine)
-			{
-				GEngine->AddOnScreenDebugMessage(1, 5.f, FColor::Yellow, TEXT("Add mapping context"));
-			}
 			Subsystem->AddMappingContext(CharacterMappingContext, 0);
 		}
 	}
@@ -46,7 +42,6 @@ void AProlabCharacter::BeginPlay()
 void AProlabCharacter::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-
 }
 
 void AProlabCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
