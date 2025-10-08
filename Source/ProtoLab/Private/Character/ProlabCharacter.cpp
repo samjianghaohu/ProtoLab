@@ -6,6 +6,7 @@
 #include "Camera/CameraComponent.h"
 #include "Character/PlayerLocomotion.h"
 #include "EnhancedInputSubsystems.h"
+#include "Character/PlayerBehaviorSystem.h"
 
 AProlabCharacter::AProlabCharacter()
 {
@@ -22,6 +23,7 @@ AProlabCharacter::AProlabCharacter()
 
 	// Create player related components
 	PlayerLocomotion = CreateDefaultSubobject<UPlayerLocomotion>(TEXT("PlayerLocomotion"));
+	PlayerBehaviorSystem = CreateDefaultSubobject<UPlayerBehaviorSystem>(TEXT("PlayerBehaviorSystem"));
 
 	AutoPossessPlayer = EAutoReceiveInput::Player0;
 }
@@ -37,11 +39,26 @@ void AProlabCharacter::BeginPlay()
 			Subsystem->AddMappingContext(CharacterMappingContext, 0);
 		}
 	}
+
+	if (PlayerBehaviorSystem != nullptr)
+	{
+		PlayerBehaviorSystem->Initialize();
+
+		if (InteractWithInteractableConfig != nullptr)
+		{
+			PlayerBehaviorSystem->AddBehaviorConfig(InteractWithInteractableConfig);
+		}
+	}
 }
 
 void AProlabCharacter::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
+
+	if (PlayerBehaviorSystem != nullptr)
+	{
+		PlayerBehaviorSystem->Update(DeltaTime);
+	}
 }
 
 void AProlabCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)

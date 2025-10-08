@@ -6,7 +6,7 @@
 #include "GameFramework/Character.h"
 #include "ProlabCharacter.generated.h"
 
-class UPlayerLocomotion;
+class AItem;
 
 UCLASS()
 class PROTOLAB_API AProlabCharacter : public ACharacter
@@ -20,11 +20,18 @@ public:
 
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
+	FORCEINLINE void SetHoveredItem(AItem* Item) { HoveredItem = Item; }
+
+	FORCEINLINE AItem* GetHoveredItem() const { return HoveredItem; }
+
 protected:
 	virtual void BeginPlay() override;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input)
 	class UInputMappingContext* CharacterMappingContext = nullptr;
+
+	UPROPERTY(EditAnywhere, Category = Behavior)
+	class UPlayerBehaviorConfigBase* InteractWithInteractableConfig = nullptr;
 
 private:
 #pragma region Components
@@ -36,8 +43,14 @@ private:
 	class UCameraComponent* ViewCamera = nullptr;
 
 	UPROPERTY(VisibleAnywhere)
-	UPlayerLocomotion* PlayerLocomotion = nullptr;
+	class UPlayerLocomotion* PlayerLocomotion = nullptr;
+
+	UPROPERTY(VisibleAnywhere)
+	class UPlayerBehaviorSystem* PlayerBehaviorSystem = nullptr;
 
 #pragma endregion
+
+	UPROPERTY(VisibleInstanceOnly)
+	AItem* HoveredItem = nullptr;
 
 };
