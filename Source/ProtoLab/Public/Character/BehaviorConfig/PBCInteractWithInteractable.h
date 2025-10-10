@@ -15,7 +15,7 @@ class PROTOLAB_API UPbcInteractWithInteractable : public UPlayerBehaviorConfigBa
 	GENERATED_BODY()
 
 public:
-	virtual UPlayerBehaviorRuntimeConfigBase* InitializeRuntime() override;
+	virtual UPlayerBehaviorRuntimeConfigBase* InitializeRuntimeInternal() override;
 
 };
 
@@ -25,6 +25,6 @@ class PROTOLAB_API UPbcInteractWithInteractableRuntime : public UPlayerBehaviorR
 	GENERATED_BODY()
 
 public:
-	virtual void Initialize() override;
+	virtual void Initialize(UPlayerBehaviorDependencies* BehaviorDependencies) override;
 	virtual void Update() override;
 };

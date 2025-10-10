@@ -42,7 +42,7 @@ void AProlabCharacter::BeginPlay()
 
 	if (PlayerBehaviorSystem != nullptr)
 	{
-		PlayerBehaviorSystem->Initialize();
+		PlayerBehaviorSystem->Initialize(this);
 
 		if (InteractWithInteractableConfig != nullptr)
 		{

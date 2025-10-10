@@ -6,6 +6,8 @@
 #include "Engine/DataAsset.h"
 #include "PlayerBehaviorConfigBase.generated.h"
 
+class UPlayerBehaviorDependencies;
+
 /**
  * 
  */
@@ -15,7 +17,10 @@ class PROTOLAB_API UPlayerBehaviorConfigBase : public UDataAsset
 	GENERATED_BODY()
 
 public:
-	virtual UPlayerBehaviorRuntimeConfigBase* InitializeRuntime() PURE_VIRTUAL(UPlayerBehaviorConfigBase::InitializeRuntime, return nullptr;)
+	UPlayerBehaviorRuntimeConfigBase* InitializeRuntime(UPlayerBehaviorDependencies* BehaviorDependencies);
+
+private:
+	virtual UPlayerBehaviorRuntimeConfigBase* InitializeRuntimeInternal() PURE_VIRTUAL(UPlayerBehaviorConfigBase::InitializeRuntimeInternal, return nullptr;)
 };
 
 
@@ -25,7 +30,10 @@ class PROTOLAB_API UPlayerBehaviorRuntimeConfigBase : public UObject
 	GENERATED_BODY()
 
 public:
-	virtual void Initialize() PURE_VIRTUAL(UPlayerBehaviorRuntimeConfigBase::Initialize)
+	virtual void Initialize(UPlayerBehaviorDependencies* BehaviorDependencies);
 
 	virtual void Update() PURE_VIRTUAL(UPlayerBehaviorRuntimeConfigBase::Update)
+
+protected:
+	UPlayerBehaviorDependencies* Dependencies = nullptr;
 };

@@ -16,7 +16,7 @@ class PROTOLAB_API UPlayerBehaviorSystem : public UObject
 public:	
 	UPlayerBehaviorSystem();
 
-	void Initialize();
+	void Initialize(class AProlabCharacter* PlayerCharacter);
 
 	void Update(float DeltaTime);
 
@@ -30,4 +30,6 @@ private:
 
 	UPROPERTY(VisibleAnywhere, Category = Behavior)
 	TArray<class UPlayerBehaviorRuntimeConfigBase*> RuntimeConfigs;
+
+	class UPlayerBehaviorDependencies* Dependencies = nullptr;
 };
