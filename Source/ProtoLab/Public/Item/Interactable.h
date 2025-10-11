@@ -6,6 +6,8 @@
 #include "UObject/Interface.h"
 #include "Interactable.generated.h"
 
+class AProlabCharacter;
+
 // This class does not need to be modified.
 UINTERFACE(MinimalAPI)
 class UInteractable : public UInterface
@@ -22,5 +24,6 @@ class PROTOLAB_API IInteractable
 
 	// Add interface functions to this class. This is the class that will be inherited to implement this interface.
 public:
-	virtual void Interact() = 0;
+	virtual bool CanInteract(AProlabCharacter* Player) PURE_VIRTUAL(IInteractable::CanInteract, return false;)
+	virtual void Interact(AProlabCharacter * Player) PURE_VIRTUAL(IInteractable::Interact)
 };

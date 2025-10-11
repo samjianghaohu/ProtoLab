@@ -10,8 +10,13 @@ AItem::AItem()
 {
 	PrimaryActorTick.bCanEverTick = true;
 
+	if (GetRootComponent() == nullptr)
+	{
+		SetRootComponent(CreateDefaultSubobject<USceneComponent>(TEXT("DefaultSceneRoot")));
+	}
+
 	ItemMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("ItemMeshComponent"));
-	SetRootComponent(ItemMesh);
+	ItemMesh->SetupAttachment(GetRootComponent());
 
 	Sphere = CreateDefaultSubobject<USphereComponent>(TEXT("SphereComponent"));
 	Sphere->SetupAttachment(GetRootComponent());
@@ -32,9 +37,40 @@ void AItem::Tick(float DeltaTime)
 
 }
 
-void AItem::Interact()
+#pragma region IInteractable
+
+bool AItem::CanInteract(AProlabCharacter* Player)
 {
+	if (Player == nullptr)
+	{
+		return false;
+	}
+
+	// Already holding an item
+	if (Player->GetHeldItem() != nullptr)
+	{
+		return false;
+	}
+
+	return true;
 }
+
+void AItem::Interact(AProlabCharacter* Player)
+{
+	if (Player == nullptr)
+	{
+		return;
+	}
+
+	// Notify player
+	Player->SetHeldItem(this);
+
+	// Attach to player
+	FAttachmentTransformRules AttachmentRules(EAttachmentRule::SnapToTarget, true);
+	GetRootComponent()->AttachToComponent(Player->GetMesh(), FAttachmentTransformRules::SnapToTargetNotIncludingScale, TEXT("HandGrip_R"));
+}
+
+#pragma endregion
 
 #pragma region Collisions
 
@@ -47,7 +83,7 @@ void AItem::OnSphereOverlapBegin(UPrimitiveComponent* OverlappedComponent, AActo
 		auto ProlabCharacter = Cast<AProlabCharacter>(OtherActor);
 		if (ProlabCharacter != nullptr)
 		{
-			ProlabCharacter->SetHoveredItem(this);
+			ProlabCharacter->SetHoveredInteractable(this);
 		}
 	}
 }
@@ -61,9 +97,9 @@ void AItem::OnSphereOverlapEnd(UPrimitiveComponent* OverlappedComponent, AActor*
 		auto ProlabCharacter = Cast<AProlabCharacter>(OtherActor);
 		if (ProlabCharacter != nullptr)
 		{
-			if (ProlabCharacter->GetHoveredItem() == this)
+			if (ProlabCharacter->GetHoveredInteractable() == this)
 			{
-				ProlabCharacter->SetHoveredItem(nullptr);
+				ProlabCharacter->SetHoveredInteractable(nullptr);
 			}
 		}
 	}

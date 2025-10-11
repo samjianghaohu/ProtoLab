@@ -34,7 +34,7 @@ protected:
 	virtual void BeginPlay() override;
 
 #pragma region Input Actions
-
+	// TODO: Store these in an asset and just reference the asset here
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input)
 	UInputAction* MoveAction = nullptr;
 

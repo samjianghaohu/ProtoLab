@@ -5,6 +5,7 @@
 #include "Character/BehaviorConfig/PlayerBehaviorDependencies.h"
 #include "Character/PlayerInputHandler.h"
 #include "Character/ProlabCharacter.h"
+#include "Item/Interactable.h"
 #include "EnhancedInputSubsystems.h"
 
 #pragma region Config Initialization
@@ -44,12 +45,17 @@ void UPbcInteractWithInteractableRuntime::CacheConfigFromConfigBase()
 
 void UPbcInteractWithInteractableRuntime::Update()
 {
-	auto InputValue = Dependencies->GetInputHandler()->GetInteractActionValue();
-	if (InputValue.Get<bool>())
+	// TODO: Make a generic state machine for behavior runtimes
+	auto PlayerCharacter = Dependencies->GetPlayerCharacter();
+	if (IInteractable* HoveredInteractable = PlayerCharacter->GetHoveredInteractable())
 	{
-		if (GEngine)
+		if (HoveredInteractable->CanInteract(PlayerCharacter))
 		{
-			GEngine->AddOnScreenDebugMessage(-1, 0.f, FColor::Yellow, TEXT("Interacting with interactable!"));
+			auto InputValue = Dependencies->GetInputHandler()->GetInteractActionValue();
+			if (InputValue.Get<bool>())
+			{
+				HoveredInteractable->Interact(PlayerCharacter);
+			}
 		}
 	}
 }

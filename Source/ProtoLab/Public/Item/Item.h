@@ -7,6 +7,8 @@
 #include "Interactable.h"
 #include "Item.generated.h"
 
+class AProlabCharacter;
+
 UCLASS()
 class PROTOLAB_API AItem : public AActor, public IInteractable
 {
@@ -18,7 +20,8 @@ public:
 	virtual void Tick(float DeltaTime) override;
 
 #pragma region IInteractable
-	virtual void Interact() override;
+	virtual bool CanInteract(AProlabCharacter* Player) override;
+	virtual void Interact(AProlabCharacter* Player) override;
 #pragma endregion
 
 protected:

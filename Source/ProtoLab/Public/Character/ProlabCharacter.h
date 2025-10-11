@@ -7,6 +7,7 @@
 #include "ProlabCharacter.generated.h"
 
 class AItem;
+class IInteractable;
 
 UCLASS()
 class PROTOLAB_API AProlabCharacter : public ACharacter
@@ -20,12 +21,15 @@ public:
 
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
+#pragma region Setters and Getters
 	FORCEINLINE class UPlayerInputHandler* GetInputHandler() const { return PlayerInputHandler; }
-
 	// TODO: extract this to a dedicated interaction targeting system
-	FORCEINLINE void SetHoveredItem(AItem* Item) { HoveredItem = Item; }
+	FORCEINLINE void SetHoveredInteractable(IInteractable* Interactable) { HoveredInteractable = Interactable; }
+	FORCEINLINE IInteractable* GetHoveredInteractable() const { return HoveredInteractable; }
+	FORCEINLINE void SetHeldItem(AItem* NewItem) { HeldItem = NewItem; }
+	FORCEINLINE AItem* GetHeldItem() const { return HeldItem; }
+#pragma endregion
 
-	FORCEINLINE AItem* GetHoveredItem() const { return HoveredItem; }
 
 protected:
 	virtual void BeginPlay() override;
@@ -57,7 +61,9 @@ private:
 #pragma endregion
 
 	// TODO: extract this to a dedicated interaction targeting system
-	UPROPERTY(VisibleInstanceOnly)
-	AItem* HoveredItem = nullptr;
+	IInteractable* HoveredInteractable = nullptr;
+
+	UPROPERTY(VisibleAnywhere, Category = Interaction)
+	AItem* HeldItem = nullptr;
 
 };
