@@ -2,7 +2,8 @@
 
 
 #include "Character/PlayerLocomotion.h"
-#include "EnhancedInputComponent.h"
+#include "Character/PlayerInputHandler.h"
+#include "Character/ProlabCharacter.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "GameFramework/Character.h"
 
@@ -34,23 +35,39 @@ void UPlayerLocomotion::BeginPlay()
 	{
 		MovementComponent->bOrientRotationToMovement = true;
 	}
+
+	// Cache input handler to access input values.
+	auto ProlabCharacter = Cast<AProlabCharacter>(GetOwner());
+	if (ProlabCharacter != nullptr)
+	{
+		Input = ProlabCharacter->GetInputHandler();
+	}
 }
 
 void UPlayerLocomotion::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
+
+	UpdateMovement(DeltaTime);
 }
 
-#pragma region Locomotion Input
+#pragma region Movement
 
-void UPlayerLocomotion::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
+void UPlayerLocomotion::UpdateMovement(float DeltaTime)
 {
-	if (UEnhancedInputComponent* EnhancedInputComponent = CastChecked<UEnhancedInputComponent>(PlayerInputComponent))
+	if (Input == nullptr) return;
+
+	// First, resolve jump
+	if (Input->GetJumpActionValue().Get<bool>())
 	{
-		EnhancedInputComponent->BindAction(MoveAction, ETriggerEvent::Triggered, this, &UPlayerLocomotion::Move);
-		EnhancedInputComponent->BindAction(LookAroundAction, ETriggerEvent::Triggered, this, &UPlayerLocomotion::LookAround);
-		EnhancedInputComponent->BindAction(JumpAction, ETriggerEvent::Triggered, this, &UPlayerLocomotion::Jump);
+		Jump();
 	}
+
+	// Then, resolve camera looking around
+	LookAround(Input->GetLookAroundActionValue());
+
+	// Last, resolve movement
+	Move(Input->GetMoveActionValue());
 }
 
 void UPlayerLocomotion::Move(const FInputActionValue& Value)

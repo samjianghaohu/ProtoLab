@@ -20,6 +20,9 @@ public:
 
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
+	FORCEINLINE class UPlayerInputHandler* GetInputHandler() const { return PlayerInputHandler; }
+
+	// TODO: extract this to a dedicated interaction targeting system
 	FORCEINLINE void SetHoveredItem(AItem* Item) { HoveredItem = Item; }
 
 	FORCEINLINE AItem* GetHoveredItem() const { return HoveredItem; }
@@ -48,8 +51,12 @@ private:
 	UPROPERTY(VisibleAnywhere)
 	class UPlayerBehaviorSystem* PlayerBehaviorSystem = nullptr;
 
+	UPROPERTY(VisibleAnywhere)
+	class UPlayerInputHandler* PlayerInputHandler = nullptr;
+
 #pragma endregion
 
+	// TODO: extract this to a dedicated interaction targeting system
 	UPROPERTY(VisibleInstanceOnly)
 	AItem* HoveredItem = nullptr;
 

@@ -19,29 +19,19 @@ public:
 
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
-	void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent);
-
 protected:
 	virtual void BeginPlay() override;
-
-#pragma region Input
-
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input)
-	UInputAction* MoveAction = nullptr;
-
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input)
-	UInputAction* LookAroundAction = nullptr;
-
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input)
-	UInputAction* JumpAction = nullptr;
-
-#pragma endregion
 
 private:
 	UPROPERTY(VisibleAnywhere)
 	ACharacter* Player = nullptr;
 
-#pragma region Input Callbacks
+	UPROPERTY(VisibleAnywhere)
+	class UPlayerInputHandler* Input = nullptr;
+
+#pragma region Movement
+
+	void UpdateMovement(float DeltaTime);
 
 	void Move(const FInputActionValue& Value);
 

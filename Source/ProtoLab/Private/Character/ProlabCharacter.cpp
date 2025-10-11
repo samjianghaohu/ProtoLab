@@ -7,6 +7,7 @@
 #include "Character/PlayerLocomotion.h"
 #include "EnhancedInputSubsystems.h"
 #include "Character/PlayerBehaviorSystem.h"
+#include "Character/PlayerInputHandler.h"
 
 AProlabCharacter::AProlabCharacter()
 {
@@ -23,7 +24,9 @@ AProlabCharacter::AProlabCharacter()
 
 	// Create player related components
 	PlayerLocomotion = CreateDefaultSubobject<UPlayerLocomotion>(TEXT("PlayerLocomotion"));
+	// TODO: move these to a local player controller component or something
 	PlayerBehaviorSystem = CreateDefaultSubobject<UPlayerBehaviorSystem>(TEXT("PlayerBehaviorSystem"));
+	PlayerInputHandler = CreateDefaultSubobject<UPlayerInputHandler>(TEXT("PlayerInputHandler"));
 
 	AutoPossessPlayer = EAutoReceiveInput::Player0;
 }
@@ -65,10 +68,9 @@ void AProlabCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCom
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
 
-	// Locomotion related input are handled by PlayerLocomotion component
-	if (PlayerLocomotion != nullptr)
+	if (PlayerInputHandler != nullptr)
 	{
-		PlayerLocomotion->SetupPlayerInputComponent(PlayerInputComponent);
+		PlayerInputHandler->SetupPlayerInputComponent(PlayerInputComponent);
 	}
 }
 
