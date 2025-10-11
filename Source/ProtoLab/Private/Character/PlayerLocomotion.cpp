@@ -40,7 +40,7 @@ void UPlayerLocomotion::BeginPlay()
 	auto ProlabCharacter = Cast<AProlabCharacter>(GetOwner());
 	if (ProlabCharacter != nullptr)
 	{
-		Input = ProlabCharacter->GetInputHandler();
+		InputHandler = ProlabCharacter->GetInputHandler();
 	}
 }
 
@@ -55,19 +55,19 @@ void UPlayerLocomotion::TickComponent(float DeltaTime, ELevelTick TickType, FAct
 
 void UPlayerLocomotion::UpdateMovement(float DeltaTime)
 {
-	if (Input == nullptr) return;
+	if (InputHandler == nullptr) return;
 
 	// First, resolve jump
-	if (Input->GetJumpActionValue().Get<bool>())
+	if (InputHandler->GetJumpActionValue().Get<bool>())
 	{
 		Jump();
 	}
 
 	// Then, resolve camera looking around
-	LookAround(Input->GetLookAroundActionValue());
+	LookAround(InputHandler->GetLookAroundActionValue());
 
 	// Last, resolve movement
-	Move(Input->GetMoveActionValue());
+	Move(InputHandler->GetMoveActionValue());
 }
 
 void UPlayerLocomotion::Move(const FInputActionValue& Value)

@@ -2,7 +2,10 @@
 
 
 #include "Character/BehaviorConfig/PBCInteractWithInteractable.h"
-#include "Character/BehaviorConfig/PlayerBehaviorDependencies.h"	
+#include "Character/BehaviorConfig/PlayerBehaviorDependencies.h"
+#include "Character/PlayerInputHandler.h"
+#include "Character/ProlabCharacter.h"
+#include "EnhancedInputSubsystems.h"
 
 #pragma region Config Initialization
 
@@ -16,24 +19,38 @@ UPlayerBehaviorRuntimeConfigBase* UPbcInteractWithInteractable::InitializeRuntim
 #pragma region Runtime Config
 
 
-void UPbcInteractWithInteractableRuntime::Initialize(UPlayerBehaviorDependencies* BehaviorDependencies)
+void UPbcInteractWithInteractableRuntime::CacheConfigFromConfigBase()
 {
-	Super::Initialize(BehaviorDependencies);
+	Config = Cast<UPbcInteractWithInteractable>(ConfigBase);
 
-	if (GEngine)
+	if (Config == nullptr)
 	{
-		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Green, TEXT("Interacting with interactable Initialized!"));
+		UE_LOG(LogTemp, Error, TEXT("UPbcInteractWithInteractableRuntime::Initialize - Config is null"));
+		return;
+	}
+
+	// TODO: Move the following logic to a OnEnable function or something.
+	if (Config->InteractInputMapping != nullptr)
+	{
+		if (APlayerController* PlayerController = Cast<APlayerController>(Dependencies->GetPlayerCharacter()->GetController()))
+		{
+			if (UEnhancedInputLocalPlayerSubsystem* Subsystem = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(PlayerController->GetLocalPlayer()))
+			{
+				Subsystem->AddMappingContext(Config->InteractInputMapping, 1);
+			}
+		}
 	}
 }
 
 void UPbcInteractWithInteractableRuntime::Update()
 {
-	bool bIsValid = Dependencies && Dependencies->GetPlayerCharacter();
-
-
-	if (bIsValid && GEngine)
+	auto InputValue = Dependencies->GetInputHandler()->GetInteractActionValue();
+	if (InputValue.Get<bool>())
 	{
-		GEngine->AddOnScreenDebugMessage(-1, 0.f, FColor::Green, TEXT("Interacting with interactable Update with valid player"));
+		if (GEngine)
+		{
+			GEngine->AddOnScreenDebugMessage(-1, 0.f, FColor::Yellow, TEXT("Interacting with interactable!"));
+		}
 	}
 }
 

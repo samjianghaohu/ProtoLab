@@ -31,7 +31,7 @@ protected:
 	virtual void BeginPlay() override;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input)
-	class UInputMappingContext* CharacterMappingContext = nullptr;
+	class UInputMappingContext* LocoMappingContext = nullptr;
 
 	UPROPERTY(EditAnywhere, Category = Behavior)
 	class UPlayerBehaviorConfigBase* InteractWithInteractableConfig = nullptr;

@@ -15,6 +15,11 @@ class PROTOLAB_API UPbcInteractWithInteractable : public UPlayerBehaviorConfigBa
 	GENERATED_BODY()
 
 public:
+#pragma region Configurable Fields
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input)
+	class UInputMappingContext* InteractInputMapping = nullptr;
+#pragma endregion
+
 	virtual UPlayerBehaviorRuntimeConfigBase* InitializeRuntimeInternal() override;
 
 };
@@ -25,6 +30,9 @@ class PROTOLAB_API UPbcInteractWithInteractableRuntime : public UPlayerBehaviorR
 	GENERATED_BODY()
 
 public:
-	virtual void Initialize(UPlayerBehaviorDependencies* BehaviorDependencies) override;
+	virtual void CacheConfigFromConfigBase() override;
 	virtual void Update() override;
+
+private:
+	UPbcInteractWithInteractable* Config = nullptr;
 };

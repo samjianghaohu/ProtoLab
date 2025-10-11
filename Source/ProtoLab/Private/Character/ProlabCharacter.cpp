@@ -39,7 +39,7 @@ void AProlabCharacter::BeginPlay()
 	{
 		if (UEnhancedInputLocalPlayerSubsystem* Subsystem = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(PlayerController->GetLocalPlayer()))
 		{
-			Subsystem->AddMappingContext(CharacterMappingContext, 0);
+			Subsystem->AddMappingContext(LocoMappingContext, 0);
 		}
 	}
 

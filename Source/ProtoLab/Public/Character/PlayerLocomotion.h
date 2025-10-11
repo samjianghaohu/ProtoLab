@@ -27,7 +27,7 @@ private:
 	ACharacter* Player = nullptr;
 
 	UPROPERTY(VisibleAnywhere)
-	class UPlayerInputHandler* Input = nullptr;
+	class UPlayerInputHandler* InputHandler = nullptr;
 
 #pragma region Movement
 

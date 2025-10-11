@@ -7,6 +7,8 @@
 #include "PlayerBehaviorDependencies.generated.h"
 
 class AProlabCharacter;
+class UInputComponent;
+class UPlayerInputHandler;
 
 /**
  * 
@@ -21,7 +23,10 @@ public:
 
 	FORCEINLINE AProlabCharacter* GetPlayerCharacter() const { return PlayerCharacter; }
 
+	FORCEINLINE UPlayerInputHandler* GetInputHandler() const { return InputHandler; }
+
 private:
 	AProlabCharacter* PlayerCharacter = nullptr;
-	
+
+	UPlayerInputHandler* InputHandler = nullptr;
 };

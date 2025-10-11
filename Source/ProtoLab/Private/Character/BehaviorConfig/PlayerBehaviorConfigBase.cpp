@@ -13,11 +13,14 @@ UPlayerBehaviorRuntimeConfigBase* UPlayerBehaviorConfigBase::InitializeRuntime(U
 		return nullptr;
 	}
 
-	Runtime->Initialize(BehaviorDependencies);
+	Runtime->Initialize(this, BehaviorDependencies);
 	return Runtime;
 }
 
-void UPlayerBehaviorRuntimeConfigBase::Initialize(UPlayerBehaviorDependencies* BehaviorDependencies)
+void UPlayerBehaviorRuntimeConfigBase::Initialize(UPlayerBehaviorConfigBase* Config, UPlayerBehaviorDependencies* BehaviorDependencies)
 {
 	Dependencies = BehaviorDependencies;
+	ConfigBase = Config;
+
+	CacheConfigFromConfigBase();
 }

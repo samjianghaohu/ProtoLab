@@ -2,8 +2,10 @@
 
 
 #include "Character/BehaviorConfig/PlayerBehaviorDependencies.h"
+#include "Character/ProlabCharacter.h"
 
 void UPlayerBehaviorDependencies::Initialize(AProlabCharacter* Player)
 {
 	PlayerCharacter = Player;
+	InputHandler = Player->GetInputHandler();
 }
