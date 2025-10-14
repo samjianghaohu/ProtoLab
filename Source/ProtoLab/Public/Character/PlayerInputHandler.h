@@ -62,5 +62,4 @@ private:
 	FEnhancedInputActionValueBinding* InteractActionBinding;
 	FEnhancedInputActionValueBinding* DropActionBinding;
 #pragma endregion
-
 };

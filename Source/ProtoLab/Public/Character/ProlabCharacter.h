@@ -30,7 +30,6 @@ public:
 	FORCEINLINE AItem* GetHeldItem() const { return HeldItem; }
 #pragma endregion
 
-
 protected:
 	virtual void BeginPlay() override;
 
@@ -38,7 +37,7 @@ protected:
 	class UInputMappingContext* LocoMappingContext = nullptr;
 
 	UPROPERTY(EditAnywhere, Category = Behavior)
-	class UPlayerBehaviorConfigBase* InteractWithInteractableConfig = nullptr;
+	TArray<class UPlayerBehaviorConfigBase*> AlwaysActiveBehaviorConfigs; // TODO: make this into a data asset
 
 private:
 #pragma region Components

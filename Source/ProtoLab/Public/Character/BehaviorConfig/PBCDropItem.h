@@ -4,20 +4,20 @@
 
 #include "CoreMinimal.h"
 #include "Character/BehaviorConfig/PlayerBehaviorConfigBase.h"
-#include "PBCInteractWithInteractable.generated.h"
+#include "PBCDropItem.generated.h"
 
 /**
  * 
  */
 UCLASS()
-class PROTOLAB_API UPbcInteractWithInteractable : public UPlayerBehaviorConfigBase
+class PROTOLAB_API UPbcDropItem : public UPlayerBehaviorConfigBase
 {
 	GENERATED_BODY()
 
 public:
 #pragma region Configurable Fields
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = Input)
-	class UInputMappingContext* InteractInputMapping = nullptr;
+	class UInputMappingContext* DropInputMapping = nullptr;
 #pragma endregion
 
 	virtual UPlayerBehaviorRuntimeConfigBase* InitializeRuntimeInternal() override;
@@ -25,7 +25,7 @@ public:
 };
 
 UCLASS()
-class PROTOLAB_API UPbcInteractWithInteractableRuntime : public UPlayerBehaviorRuntimeConfigBase
+class PROTOLAB_API UPbcDropItemRuntime : public UPlayerBehaviorRuntimeConfigBase
 {
 	GENERATED_BODY()
 
@@ -34,5 +34,7 @@ public:
 	virtual void Update() override;
 
 private:
-	UPbcInteractWithInteractable* Config = nullptr;
+	UPbcDropItem* Config = nullptr;
 };
+
+

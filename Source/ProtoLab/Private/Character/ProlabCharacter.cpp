@@ -1,13 +1,13 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
-
 #include "Character/ProlabCharacter.h"
-#include "GameFramework/SpringArmComponent.h"
 #include "Camera/CameraComponent.h"
-#include "Character/PlayerLocomotion.h"
-#include "EnhancedInputSubsystems.h"
+#include "Character/BehaviorConfig/PlayerBehaviorConfigBase.h"
 #include "Character/PlayerBehaviorSystem.h"
 #include "Character/PlayerInputHandler.h"
+#include "Character/PlayerLocomotion.h"
+#include "EnhancedInputSubsystems.h"
+#include "GameFramework/SpringArmComponent.h"
 
 AProlabCharacter::AProlabCharacter()
 {
@@ -25,7 +25,6 @@ AProlabCharacter::AProlabCharacter()
 	// Create player related components
 	PlayerLocomotion = CreateDefaultSubobject<UPlayerLocomotion>(TEXT("PlayerLocomotion"));
 	// TODO: move these to a local player controller component or something
-	PlayerBehaviorSystem = CreateDefaultSubobject<UPlayerBehaviorSystem>(TEXT("PlayerBehaviorSystem"));
 	PlayerInputHandler = CreateDefaultSubobject<UPlayerInputHandler>(TEXT("PlayerInputHandler"));
 
 	AutoPossessPlayer = EAutoReceiveInput::Player0;
@@ -43,13 +42,18 @@ void AProlabCharacter::BeginPlay()
 		}
 	}
 
+	// TODO: move these to a local player controller component or something
+	PlayerBehaviorSystem = NewObject<UPlayerBehaviorSystem>(this, UPlayerBehaviorSystem::StaticClass());
 	if (PlayerBehaviorSystem != nullptr)
 	{
 		PlayerBehaviorSystem->Initialize(this);
 
-		if (InteractWithInteractableConfig != nullptr)
+		for (UPlayerBehaviorConfigBase* Config : AlwaysActiveBehaviorConfigs)
 		{
-			PlayerBehaviorSystem->AddBehaviorConfig(InteractWithInteractableConfig);
+			if (Config != nullptr)
+			{
+				PlayerBehaviorSystem->AddBehaviorConfig(Config);
+			}
 		}
 	}
 }

@@ -24,6 +24,12 @@ public:
 	virtual void Interact(AProlabCharacter* Player) override;
 #pragma endregion
 
+#pragma region Item Interface
+	virtual bool CanBeDropped(AProlabCharacter* Player);
+	void Drop(AProlabCharacter* Player);
+#pragma endregion
+
+
 protected:
 	virtual void BeginPlay() override;
 

@@ -72,6 +72,35 @@ void AItem::Interact(AProlabCharacter* Player)
 
 #pragma endregion
 
+#pragma region Item Interface
+
+bool AItem::CanBeDropped(AProlabCharacter* Player)
+{
+	if (Player == nullptr)
+	{
+		return false;
+	}
+
+	return Player->GetHeldItem() == this;
+}
+
+void AItem::Drop(AProlabCharacter* Player)
+{
+	if (Player == nullptr)
+	{
+		return;
+	}
+
+	// Notify player
+	Player->SetHeldItem(nullptr);
+
+	// Detach from player
+	GetRootComponent()->DetachFromComponent(FDetachmentTransformRules::KeepWorldTransform);
+}
+
+#pragma endregion
+
+
 #pragma region Collisions
 
 void AItem::OnSphereOverlapBegin(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)

@@ -37,7 +37,7 @@ void UPbcInteractWithInteractableRuntime::CacheConfigFromConfigBase()
 		{
 			if (UEnhancedInputLocalPlayerSubsystem* Subsystem = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(PlayerController->GetLocalPlayer()))
 			{
-				Subsystem->AddMappingContext(Config->InteractInputMapping, 1);
+				Subsystem->AddMappingContext(Config->InteractInputMapping, 1); // Make a priority enum for behavior inputs
 			}
 		}
 	}
