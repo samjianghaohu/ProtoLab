@@ -6,6 +6,7 @@
 #include "Character/ProlabCharacter.h"
 #include "Character/PlayerInputHandler.h"
 #include "Item/Item.h"
+#include "PlayerInput/PlayerInputTypes.h"
 #include "EnhancedInputSubsystems.h"
 
 #pragma region Config Initialization
@@ -36,7 +37,7 @@ void UPbcDropItemRuntime::CacheConfigFromConfigBase()
 		{
 			if (UEnhancedInputLocalPlayerSubsystem* Subsystem = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(PlayerController->GetLocalPlayer()))
 			{
-				Subsystem->AddMappingContext(Config->DropInputMapping, 2); // Make a priority enum for behavior inputs
+				Subsystem->AddMappingContext(Config->DropInputMapping, 1); // Make a priority enum for behavior inputs
 			}
 		}
 	}
@@ -50,7 +51,7 @@ void UPbcDropItemRuntime::Update()
 	{
 		if (HeldItem->CanBeDropped(PlayerCharacter))
 		{
-			auto InputValue = Dependencies->GetInputHandler()->GetDropActionValue();
+			auto InputValue = Dependencies->GetInputHandler()->GetInputActionValue(EPlayerInputType::EPIA_Drop);
 			if (InputValue.Get<bool>())
 			{
 				HeldItem->Drop(PlayerCharacter);

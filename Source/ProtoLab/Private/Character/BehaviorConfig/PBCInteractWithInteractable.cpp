@@ -5,6 +5,7 @@
 #include "Character/BehaviorConfig/PlayerBehaviorDependencies.h"
 #include "Character/PlayerInputHandler.h"
 #include "Character/ProlabCharacter.h"
+#include "PlayerInput/PlayerInputTypes.h"
 #include "Item/Interactable.h"
 #include "EnhancedInputSubsystems.h"
 
@@ -51,7 +52,7 @@ void UPbcInteractWithInteractableRuntime::Update()
 	{
 		if (HoveredInteractable->CanInteract(PlayerCharacter))
 		{
-			auto InputValue = Dependencies->GetInputHandler()->GetInteractActionValue();
+			auto InputValue = Dependencies->GetInputHandler()->GetInputActionValue(EPlayerInputType::EPIA_Interact);
 			if (InputValue.Get<bool>())
 			{
 				HoveredInteractable->Interact(PlayerCharacter);

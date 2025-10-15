@@ -4,8 +4,10 @@
 #include "Character/PlayerLocomotion.h"
 #include "Character/PlayerInputHandler.h"
 #include "Character/ProlabCharacter.h"
+#include "PlayerInput/PlayerInputTypes.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "GameFramework/Character.h"
+#include "EnhancedInputComponent.h"
 
 UPlayerLocomotion::UPlayerLocomotion()
 {
@@ -58,16 +60,16 @@ void UPlayerLocomotion::UpdateMovement(float DeltaTime)
 	if (InputHandler == nullptr) return;
 
 	// First, resolve jump
-	if (InputHandler->GetJumpActionValue().Get<bool>())
+	if (InputHandler->GetInputActionValue(EPlayerInputType::EPIA_Jump).Get<bool>())
 	{
 		Jump();
 	}
 
 	// Then, resolve camera looking around
-	LookAround(InputHandler->GetLookAroundActionValue());
+	LookAround(InputHandler->GetInputActionValue(EPlayerInputType::EPIA_LookAround));
 
 	// Last, resolve movement
-	Move(InputHandler->GetMoveActionValue());
+	Move(InputHandler->GetInputActionValue(EPlayerInputType::EPIA_Move));
 }
 
 void UPlayerLocomotion::Move(const FInputActionValue& Value)

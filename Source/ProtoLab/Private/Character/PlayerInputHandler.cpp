@@ -2,6 +2,8 @@
 
 
 #include "Character/PlayerInputHandler.h"
+#include "PlayerInput/PlayerInputConfig.h"
+#include "EnhancedInputComponent.h"
 
 UPlayerInputHandler::UPlayerInputHandler()
 {
@@ -20,28 +22,51 @@ void UPlayerInputHandler::TickComponent(float DeltaTime, ELevelTick TickType, FA
 
 void UPlayerInputHandler::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
-	if (UEnhancedInputComponent* EnhancedInputComponent = CastChecked<UEnhancedInputComponent>(PlayerInputComponent))
+	PopulateInputActionMap(PlayerInputComponent);
+}
+
+void UPlayerInputHandler::PopulateInputActionMap(UInputComponent* PlayerInputComponent)
+{
+	InputActionMap.Empty();
+
+	CachedEnhancedInputComponent = CastChecked<UEnhancedInputComponent>(PlayerInputComponent);
+	if (CachedEnhancedInputComponent != nullptr)
 	{
-		if (MoveAction)
+		if (InputConfigs != nullptr)
 		{
-			MoveActionBinding = &EnhancedInputComponent->BindActionValue(MoveAction);
-		}
-		if (LookAroundAction)
-		{
-			LookAroundActionBinding = &EnhancedInputComponent->BindActionValue(LookAroundAction);
-		}
-		if (JumpAction)
-		{
-			JumpActionBinding = &EnhancedInputComponent->BindActionValue(JumpAction);
-		}
-		if (InteractAction)
-		{
-			InteractActionBinding = &EnhancedInputComponent->BindActionValue(InteractAction);
-		}
-		if (DropAction)
-		{
-			DropActionBinding = &EnhancedInputComponent->BindActionValue(DropAction);
+			for (FPlayerInputConfig Config : InputConfigs->PlayerInputConfigs)
+			{
+				if (Config.InputType != EPlayerInputType::EPIA_None && Config.InputAction != nullptr)
+				{
+					CachedEnhancedInputComponent->BindActionValue(Config.InputAction);
+					InputActionMap.Emplace(Config.InputType, Config.InputAction);
+				}
+			}
 		}
 	}
+}
+
+FInputActionValue UPlayerInputHandler::GetInputActionValue(EPlayerInputType InputType)
+{
+	if (InputType == EPlayerInputType::EPIA_None)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Getting input action value for type None is invalid! Check your code."));
+		return FInputActionValue();
+	}
+
+	if (CachedEnhancedInputComponent == nullptr)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Enhanced input component is not cached! Did you call SetupPlayerInputComponent?"));
+		return FInputActionValue();
+	}
+
+	auto ActionPtr = InputActionMap.Find(InputType);
+	if (ActionPtr != nullptr && *ActionPtr != nullptr)
+	{
+		return CachedEnhancedInputComponent->GetBoundActionValue(*ActionPtr);
+	}
+
+	UE_LOG(LogTemp, Warning, TEXT("No input action mapped for input type %d. Did you set it up correctly?"), static_cast<uint8>(InputType));
+	return FInputActionValue();
 }
 
