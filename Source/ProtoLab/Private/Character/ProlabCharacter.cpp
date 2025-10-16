@@ -52,7 +52,7 @@ void AProlabCharacter::BeginPlay()
 		{
 			if (Config != nullptr)
 			{
-				PlayerBehaviorSystem->AddBehaviorConfig(Config);
+				PlayerBehaviorSystem->AddGlobalPlayerBehaviorConfig(Config);
 			}
 		}
 	}

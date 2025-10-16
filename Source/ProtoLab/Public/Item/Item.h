@@ -5,9 +5,12 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
 #include "Interactable.h"
+#include "ItemInteractionSettings.h"
 #include "Item.generated.h"
 
 class AProlabCharacter;
+class UItemBehaviorConfigBase;
+class UItemBehaviorRuntimeConfigBase;
 
 UCLASS()
 class PROTOLAB_API AItem : public AActor, public IInteractable
@@ -27,10 +30,18 @@ public:
 #pragma region Item Interface
 	virtual bool CanBeDropped(AProlabCharacter* Player);
 	void Drop(AProlabCharacter* Player);
+
+	FORCEINLINE UItemBehaviorConfigBase* GetItemBehaviorConfig() const { return InteractionSettings.ItemBehaviorConfig; }
+	FORCEINLINE void CacheRuntimeBehavior(UItemBehaviorRuntimeConfigBase* RuntimeBehavior) { CachedRuntimeBehavior = RuntimeBehavior; }
+	FORCEINLINE UItemBehaviorRuntimeConfigBase* GetCachedRuntimeBehavior() const { return CachedRuntimeBehavior; }
+	FORCEINLINE AProlabCharacter* GetHolderPlayer() const { return HolderPlayer; }
 #pragma endregion
 
 
 protected:
+	UPROPERTY(EditAnywhere, Category = Interaction)
+	FItemInteractionSettings InteractionSettings;
+
 	virtual void BeginPlay() override;
 
 #pragma region Collisions
@@ -51,4 +62,8 @@ private:
 
 	UPROPERTY(VisibleAnywhere)
 	class USphereComponent* Sphere = nullptr;
+
+	UItemBehaviorRuntimeConfigBase* CachedRuntimeBehavior = nullptr;
+
+	AProlabCharacter* HolderPlayer = nullptr;
 };

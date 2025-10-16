@@ -23,6 +23,8 @@ public:
 
 #pragma region Setters and Getters
 	FORCEINLINE class UPlayerInputHandler* GetInputHandler() const { return PlayerInputHandler; }
+	FORCEINLINE class UPlayerBehaviorSystem* GetBehaviorSystem() const { return PlayerBehaviorSystem; }
+
 	// TODO: extract this to a dedicated interaction targeting system
 	FORCEINLINE void SetHoveredInteractable(IInteractable* Interactable) { HoveredInteractable = Interactable; }
 	FORCEINLINE IInteractable* GetHoveredInteractable() const { return HoveredInteractable; }

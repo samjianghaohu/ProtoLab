@@ -11,7 +11,7 @@ class UInputComponent;
 class UPlayerInputHandler;
 
 /**
- * 
+ * Dependencies class containing references needed by player behavior runtime logic.
  */
 UCLASS()
 class PROTOLAB_API UPlayerBehaviorDependencies : public UObject

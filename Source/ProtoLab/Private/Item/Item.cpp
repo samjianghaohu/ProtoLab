@@ -2,9 +2,10 @@
 
 
 #include "Item/Item.h"
+#include "Character/ProlabCharacter.h"
+#include "Character/PlayerBehaviorSystem.h"
 #include "Components/StaticMeshComponent.h"
 #include <Components/SphereComponent.h>
-#include "Character/ProlabCharacter.h"
 
 AItem::AItem()
 {
@@ -62,12 +63,19 @@ void AItem::Interact(AProlabCharacter* Player)
 		return;
 	}
 
-	// Notify player
+	// Notify player and cache holder
 	Player->SetHeldItem(this);
+	HolderPlayer = Player;
 
 	// Attach to player
 	FAttachmentTransformRules AttachmentRules(EAttachmentRule::SnapToTarget, true);
 	GetRootComponent()->AttachToComponent(Player->GetMesh(), FAttachmentTransformRules::SnapToTargetNotIncludingScale, TEXT("HandGrip_R"));
+
+	auto BehaviorSystem = Player->GetBehaviorSystem();
+	if (BehaviorSystem != nullptr)
+	{
+		BehaviorSystem->AddItemBehaviorConfig(this);
+	}
 }
 
 #pragma endregion
@@ -91,11 +99,18 @@ void AItem::Drop(AProlabCharacter* Player)
 		return;
 	}
 
-	// Notify player
-	Player->SetHeldItem(nullptr);
+	auto BehaviorSystem = Player->GetBehaviorSystem();
+	if (BehaviorSystem != nullptr)
+	{
+		BehaviorSystem->RemoveItemBehaviorConfig(this);
+	}
 
 	// Detach from player
 	GetRootComponent()->DetachFromComponent(FDetachmentTransformRules::KeepWorldTransform);
+
+	// Notify player and clear holder
+	Player->SetHeldItem(nullptr);
+	HolderPlayer = nullptr;
 }
 
 #pragma endregion

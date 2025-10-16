@@ -9,7 +9,7 @@
 class UPlayerBehaviorDependencies;
 
 /**
- * 
+ * Base class for all player behavior config data assets.
  */
 UCLASS(Abstract)
 class PROTOLAB_API UPlayerBehaviorConfigBase : public UDataAsset
@@ -24,7 +24,10 @@ private:
 	virtual UPlayerBehaviorRuntimeConfigBase* InitializeRuntimeInternal() PURE_VIRTUAL(UPlayerBehaviorConfigBase::InitializeRuntimeInternal, return nullptr;)
 };
 
-
+/**
+ * Base class for all player behavior runtime config instances.
+ * Instantiated from a player behavior config data asset, and initialized with player behavior dependencies.	
+ */
 UCLASS(Abstract)
 class PROTOLAB_API UPlayerBehaviorRuntimeConfigBase : public UObject
 {

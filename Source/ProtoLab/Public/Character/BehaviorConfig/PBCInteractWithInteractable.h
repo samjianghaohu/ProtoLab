@@ -7,7 +7,7 @@
 #include "PBCInteractWithInteractable.generated.h"
 
 /**
- * 
+ * A behavior config that defines interacting with interactable objects.
  */
 UCLASS()
 class PROTOLAB_API UPbcInteractWithInteractable : public UPlayerBehaviorConfigBase
