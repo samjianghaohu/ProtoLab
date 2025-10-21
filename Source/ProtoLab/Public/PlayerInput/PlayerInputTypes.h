@@ -11,7 +11,8 @@ enum class EPlayerInputType : uint8
 	EPIA_LookAround UMETA(DisplayName = "Look Around"),
 	EPIA_Jump UMETA(DisplayName = "Jump"),
 	EPIA_Interact UMETA(DisplayName = "Interact"),
-	EPIA_Drop UMETA(DisplayName = "Drop")
+	EPIA_Drop UMETA(DisplayName = "Drop"),
+	EPIA_PrimaryAction UMETA(DisplayName = "Primary Action")
 };
 
 USTRUCT(BlueprintType)

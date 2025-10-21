@@ -5,6 +5,10 @@
 #include "Item/BehaviorConfig/ItemBehaviorDependencies.h"
 #include "Item/Item.h"
 #include "Character/ProlabCharacter.h"
+#include "Character/PlayerInputHandler.h"
+#include "PlayerInput/PlayerInputTypes.h"
+#include "Animation/AnimNotifyWithDelegates.h"
+#include "Animation/AnimMontage.h"
 #include "EnhancedInputSubsystems.h"
 
 #pragma region Config Initialization
@@ -18,17 +22,6 @@ UItemBehaviorRuntimeConfigBase* UIbcThrow::InitializeRuntimeInternal()
 
 #pragma region Runtime Config
 
-void UIbcThrowRuntime::Initialize(UItemBehaviorConfigBase* InConfigBase, UItemBehaviorDependencies* InBehaviorDependencies)
-{
-	Super::Initialize(InConfigBase, InBehaviorDependencies);
-
-	auto HolderPlayer = Dependencies->GetItem()->GetHolderPlayer();
-	if (HolderPlayer != nullptr)
-	{
-		PlayerController = Cast<APlayerController>(HolderPlayer->GetController());
-	}
-}
-
 void UIbcThrowRuntime::CacheConfigFromConfigBase()
 {
 	Config = Cast<UIbcThrow>(ConfigBase);
@@ -37,6 +30,12 @@ void UIbcThrowRuntime::CacheConfigFromConfigBase()
 	{
 		UE_LOG(LogTemp, Error, TEXT("UIbcThrowRuntime::Initialize - Config is null"));
 		return;
+	}
+
+	auto HolderPlayer = Dependencies->GetItem()->GetHolderPlayer();
+	if (HolderPlayer != nullptr)
+	{
+		PlayerController = Cast<APlayerController>(HolderPlayer->GetController());
 	}
 
 	// TODO: Move the following logic to a OnEnable function or something.
@@ -51,9 +50,10 @@ void UIbcThrowRuntime::CacheConfigFromConfigBase()
 
 void UIbcThrowRuntime::Update()
 {
-	if (GEngine)
+	auto InputValue = Dependencies->GetInputHandler()->GetInputActionValue(EPlayerInputType::EPIA_PrimaryAction);
+	if (InputValue.Get<bool>() && CanHeldItemBeThrown())
 	{
-		GEngine->AddOnScreenDebugMessage(-1, 0.f, FColor::Green, FString::Printf(TEXT("UIbcThrowRuntime::Update")));
+		PlayThrowAnimation();
 	}
 }
 
@@ -66,6 +66,58 @@ void UIbcThrowRuntime::Dispose()
 			Subsystem->RemoveMappingContext(Config->ThrowItemInputMapping);
 		}
 	}
+}
+
+bool UIbcThrowRuntime::CanHeldItemBeThrown()
+{
+	auto Item = Dependencies->GetItem();
+	if (Item == nullptr)
+	{
+		return false;
+	}
+
+	auto HolderPlayer = Item->GetHolderPlayer();
+	if (HolderPlayer == nullptr)
+	{
+		return false;
+	}
+
+	return Item->CanBeDropped(HolderPlayer);
+}
+
+void UIbcThrowRuntime::PlayThrowAnimation()
+{
+	auto HolderPlayer = Dependencies->GetItem()->GetHolderPlayer();
+	if (HolderPlayer != nullptr && Config->ThrowAnimation != nullptr)
+	{
+		const TArray<FAnimNotifyEvent> NotifyEvents = Config->ThrowAnimation->Notifies;
+		if (NotifyEvents.Num() > 0)
+		{
+			if (const auto Notify = Cast<UAnimNotifyWithDelegates>(NotifyEvents[0].Notify))
+			{
+				Notify->OnNotified.AddUObject(this, &UIbcThrowRuntime::OnThrowAnimationNotifyTriggered);
+			}
+		}
+
+		HolderPlayer->PlayAnimMontage(Config->ThrowAnimation, Config->ThrowAnimationPlayRate);
+	}
+}
+
+void UIbcThrowRuntime::OnThrowAnimationNotifyTriggered()
+{
+	const TArray<FAnimNotifyEvent> NotifyEvents = Config->ThrowAnimation->Notifies;
+	if (NotifyEvents.Num() > 0)
+	{
+		if (const auto Notify = Cast<UAnimNotifyWithDelegates>(NotifyEvents[0].Notify))
+		{
+			Notify->OnNotified.RemoveAll(this);
+		}
+	}
+
+	auto Item = Dependencies->GetItem();
+	auto HolderPlayer = Item->GetHolderPlayer();
+
+	Item->Drop(HolderPlayer);
 }
 
 #pragma endregion
