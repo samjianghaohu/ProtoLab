@@ -46,13 +46,21 @@ void UIbcThrowRuntime::CacheConfigFromConfigBase()
 			Subsystem->AddMappingContext(Config->ThrowItemInputMapping, 2); // Make a priority enum for behavior inputs
 		}
 	}
+
+	bIsThrowAnimPlaying = false;
 }
 
 void UIbcThrowRuntime::Update()
 {
+	if (bIsThrowAnimPlaying)
+	{
+		return;
+	}
+
 	auto InputValue = Dependencies->GetInputHandler()->GetInputActionValue(EPlayerInputType::EPIA_PrimaryAction);
 	if (InputValue.Get<bool>() && CanHeldItemBeThrown())
 	{
+		bIsThrowAnimPlaying = true;
 		PlayThrowAnimation();
 	}
 }

@@ -28,6 +28,7 @@ public:
 	// TODO: extract this to a dedicated interaction targeting system
 	FORCEINLINE void SetHoveredInteractable(IInteractable* Interactable) { HoveredInteractable = Interactable; }
 	FORCEINLINE IInteractable* GetHoveredInteractable() const { return HoveredInteractable; }
+
 	FORCEINLINE void SetHeldItem(AItem* NewItem) { HeldItem = NewItem; }
 	FORCEINLINE AItem* GetHeldItem() const { return HeldItem; }
 #pragma endregion
@@ -40,6 +41,9 @@ protected:
 
 	UPROPERTY(EditAnywhere, Category = Behavior)
 	TArray<class UPlayerBehaviorConfigBase*> AlwaysActiveBehaviorConfigs; // TODO: make this into a data asset
+
+	UPROPERTY(EditAnywhere, Category = Behavior)
+	class UItemBehaviorConfigBase* DefaultItemBehaviorConfig; // TODO: move this config to player behavior system itself
 
 private:
 #pragma region Components

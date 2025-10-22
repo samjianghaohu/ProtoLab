@@ -46,7 +46,7 @@ void AProlabCharacter::BeginPlay()
 	PlayerBehaviorSystem = NewObject<UPlayerBehaviorSystem>(this, UPlayerBehaviorSystem::StaticClass());
 	if (PlayerBehaviorSystem != nullptr)
 	{
-		PlayerBehaviorSystem->Initialize(this);
+		PlayerBehaviorSystem->Initialize(this, DefaultItemBehaviorConfig);
 
 		for (UPlayerBehaviorConfigBase* Config : AlwaysActiveBehaviorConfigs)
 		{

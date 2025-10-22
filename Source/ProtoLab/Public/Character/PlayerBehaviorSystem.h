@@ -18,7 +18,7 @@ class PROTOLAB_API UPlayerBehaviorSystem : public UObject
 public:	
 	UPlayerBehaviorSystem();
 
-	void Initialize(class AProlabCharacter* PlayerCharacter);
+	void Initialize(class AProlabCharacter* PlayerCharacter, UItemBehaviorConfigBase* DefaultItemBehavior);
 
 	void Update(float DeltaTime);
 
@@ -32,7 +32,6 @@ public:
 	void RemoveItemBehaviorConfig(AItem* Item);
 #pragma endregion
 
-
 private:
 	UPROPERTY(VisibleAnywhere, Category = Behavior)
 	TArray<UPlayerBehaviorConfigBase*> GlobalBehaviorConfigs;
@@ -41,14 +40,13 @@ private:
 	TArray<class UPlayerBehaviorRuntimeConfigBase*> GlobalRuntimeConfigs;
 
 	UPROPERTY(VisibleAnywhere, Category = Behavior)
-	TArray<UItemBehaviorConfigBase*> ItemBehaviorConfigs;
-
-	UPROPERTY(VisibleAnywhere, Category = Behavior)
 	TArray<class UItemBehaviorRuntimeConfigBase*> ItemRuntimeConfigs;
 
 	class UPlayerBehaviorDependencies* PlayerBehaviorDependencies = nullptr;
 
 	class AProlabCharacter* Player = nullptr;
+
+	UItemBehaviorConfigBase* DefaultItemBehaviorConfig = nullptr;
 
 	void UpdateGlobalBehaviors(float DeltaTime);
 

@@ -45,6 +45,8 @@ private:
 	UIbcThrow* Config = nullptr;
 	class APlayerController* PlayerController = nullptr;
 
+	bool bIsThrowAnimPlaying = false;
+
 	bool CanHeldItemBeThrown();
 
 	void PlayThrowAnimation();

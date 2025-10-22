@@ -12,10 +12,17 @@ UPlayerBehaviorSystem::UPlayerBehaviorSystem()
 {
 }
 
-void UPlayerBehaviorSystem::Initialize(AProlabCharacter* PlayerCharacter)
+void UPlayerBehaviorSystem::Initialize(AProlabCharacter* PlayerCharacter, UItemBehaviorConfigBase* DefaultItemBehavior)
 {
 	GlobalBehaviorConfigs.Empty();
 	GlobalRuntimeConfigs.Empty();
+
+	if (DefaultItemBehavior == nullptr)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("UPlayerBehaviorSystem::Initialize - No default item behavior is provided. Some items might not work."));
+	}
+
+	DefaultItemBehaviorConfig = DefaultItemBehavior;
 
 	if (PlayerCharacter == nullptr)
 	{
@@ -65,6 +72,8 @@ void UPlayerBehaviorSystem::RemoveGlobalPlayerBehaviorConfig(UPlayerBehaviorConf
 		UE_LOG(LogTemp, Error, TEXT("UPlayerBehaviorSystem::RemoveBehaviorConfig - ConfigToRemove is null"));
 		return;
 	}
+
+	// TODO: Run behavior dispose logic if any
 }
 
 void UPlayerBehaviorSystem::UpdateGlobalBehaviors(float DeltaTime)
@@ -93,8 +102,13 @@ void UPlayerBehaviorSystem::AddItemBehaviorConfig(AItem* Item)
 	auto NewConfig = Item->GetItemBehaviorConfig();
 	if (NewConfig == nullptr)
 	{
-		UE_LOG(LogTemp, Error, TEXT("UPlayerBehaviorSystem::AddItemBehaviorConfig - NewConfig is null on item: %s"), *Item->GetName());
-		return;
+		if (DefaultItemBehaviorConfig == nullptr)
+		{
+			UE_LOG(LogTemp, Error, TEXT("UPlayerBehaviorSystem::AddItemBehaviorConfig - No default behavior can be used for Item: %s"), *Item->GetName());
+			return;
+		}
+
+		NewConfig = DefaultItemBehaviorConfig;
 	}
 
 	if (Player == nullptr)
@@ -118,8 +132,6 @@ void UPlayerBehaviorSystem::AddItemBehaviorConfig(AItem* Item)
 	{
 		// Cache the runtime behavior in the item so we have the reference when trying to remove it.
 		Item->CacheRuntimeBehavior(Runtime);
-
-		ItemBehaviorConfigs.Emplace(NewConfig);
 		ItemRuntimeConfigs.Emplace(Runtime);
 	}
 }
@@ -139,17 +151,9 @@ void UPlayerBehaviorSystem::RemoveItemBehaviorConfig(AItem* Item)
 		return;
 	}
 
-	auto ConfigToRemove = Item->GetItemBehaviorConfig();
-	if (ConfigToRemove == nullptr)
-	{
-		UE_LOG(LogTemp, Error, TEXT("UPlayerBehaviorSystem::RemoveItemBehaviorConfig - Item %s has no behavior config"), *Item->GetName());
-		return;
-	}
-
 	Item->CacheRuntimeBehavior(nullptr);
 
 	ItemRuntimeConfigs.Remove(RuntimeToRemove);
-	ItemBehaviorConfigs.Remove(ConfigToRemove);
 
 	RuntimeToRemove->Dispose();
 }
