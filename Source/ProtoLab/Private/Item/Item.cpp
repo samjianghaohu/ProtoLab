@@ -5,19 +5,16 @@
 #include "Character/ProlabCharacter.h"
 #include "Character/PlayerBehaviorSystem.h"
 #include "Components/StaticMeshComponent.h"
-#include <Components/SphereComponent.h>
+#include "Components/SphereComponent.h"
+#include "Engine/EngineTypes.h"
 
 AItem::AItem()
 {
 	PrimaryActorTick.bCanEverTick = true;
 
-	if (GetRootComponent() == nullptr)
-	{
-		SetRootComponent(CreateDefaultSubobject<USceneComponent>(TEXT("DefaultSceneRoot")));
-	}
-
-	ItemMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("ItemMeshComponent"));
-	ItemMesh->SetupAttachment(GetRootComponent());
+	ItemMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("RootMeshComponent"));
+	SetRootComponent(ItemMesh);
+	RootMesh = ItemMesh;
 
 	Sphere = CreateDefaultSubobject<USphereComponent>(TEXT("SphereComponent"));
 	Sphere->SetupAttachment(GetRootComponent());
@@ -26,6 +23,8 @@ AItem::AItem()
 void AItem::BeginPlay()
 {
 	Super::BeginPlay();
+
+	InitializePhysicsAndCollision();
 	
 	Sphere->OnComponentBeginOverlap.AddDynamic(this, &AItem::OnSphereOverlapBegin);
 	Sphere->OnComponentEndOverlap.AddDynamic(this, &AItem::OnSphereOverlapEnd);
@@ -65,17 +64,7 @@ void AItem::Interact(AProlabCharacter* Player)
 
 	// Notify player and cache holder
 	Player->SetHeldItem(this);
-	HolderPlayer = Player;
-
-	// Attach to player
-	FAttachmentTransformRules AttachmentRules(EAttachmentRule::SnapToTarget, true);
-	GetRootComponent()->AttachToComponent(Player->GetMesh(), FAttachmentTransformRules::SnapToTargetNotIncludingScale, TEXT("HandGrip_R"));
-
-	auto BehaviorSystem = Player->GetBehaviorSystem();
-	if (BehaviorSystem != nullptr)
-	{
-		BehaviorSystem->AddItemBehaviorConfig(this);
-	}
+	SetHolderPlayerInternal(Player);
 }
 
 #pragma endregion
@@ -99,18 +88,9 @@ void AItem::Drop(AProlabCharacter* Player)
 		return;
 	}
 
-	auto BehaviorSystem = Player->GetBehaviorSystem();
-	if (BehaviorSystem != nullptr)
-	{
-		BehaviorSystem->RemoveItemBehaviorConfig(this);
-	}
-
-	// Detach from player
-	GetRootComponent()->DetachFromComponent(FDetachmentTransformRules::KeepWorldTransform);
-
 	// Notify player and clear holder
+	SetHolderPlayerInternal(nullptr);
 	Player->SetHeldItem(nullptr);
-	HolderPlayer = nullptr;
 }
 
 #pragma endregion
@@ -147,6 +127,92 @@ void AItem::OnSphereOverlapEnd(UPrimitiveComponent* OverlappedComponent, AActor*
 			}
 		}
 	}
+}
+
+#pragma endregion
+
+#pragma region Internal
+
+void AItem::InitializePhysicsAndCollision()
+{
+	if (RootMesh == nullptr)
+	{
+		UE_LOG(LogTemp, Error, TEXT("Item %s: No valid root mesh. Cannot initialize Physics."), *GetName());
+		return;
+	}
+
+	RootMesh->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
+
+	RootMesh->SetSimulatePhysics(true);
+	RootMesh->SetEnableGravity(true);
+}
+
+void AItem::SetHolderPlayerInternal(AProlabCharacter* NewHolder)
+{
+	if (NewHolder == HolderPlayer)
+	{
+		// Holder didn't change. Do nothing.
+		return;
+	}
+
+	if (HolderPlayer == nullptr)
+	{
+		// Holder is changing from null to a value. Item is picked up.
+		HolderPlayer = NewHolder;
+		OnPickup();
+	}
+	else if (NewHolder == nullptr)
+	{
+		// Holder is changing from a value to null. Item is released.
+		OnRelease();
+		HolderPlayer = NewHolder; // Set HolderPlayer to null AFTER runing OnRelease logic because some of that logic might still need information of the holder.
+	}
+	else
+	{
+		// NOTE: Add future cases such as passing on from one player to another.
+	}
+}
+
+void AItem::OnPickup()
+{
+	// Disable physical collision and physics.
+	if (RootMesh != nullptr)
+	{
+		RootMesh->SetSimulatePhysics(false);
+		RootMesh->SetEnableGravity(false);
+
+		RootMesh->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+	}
+
+	// Attach to player
+	FAttachmentTransformRules AttachmentRules(EAttachmentRule::SnapToTarget, true);
+	GetRootComponent()->AttachToComponent(HolderPlayer->GetMesh(), FAttachmentTransformRules::SnapToTargetNotIncludingScale, TEXT("HandGrip_R"));
+
+	// Initialize item behavior.
+	auto BehaviorSystem = HolderPlayer->GetBehaviorSystem();
+	if (BehaviorSystem != nullptr)
+	{
+		BehaviorSystem->AddItemBehaviorConfig(this);
+	}
+}
+
+void AItem::OnRelease()
+{
+	// Dispose item behavior
+	auto BehaviorSystem = HolderPlayer->GetBehaviorSystem();
+	if (BehaviorSystem != nullptr)
+	{
+		BehaviorSystem->RemoveItemBehaviorConfig(this);
+	}
+
+	// Detach from player
+	GetRootComponent()->DetachFromComponent(FDetachmentTransformRules::KeepWorldTransform);
+
+	// Reenable physics and collision.
+	RootMesh->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
+
+	RootMesh->SetSimulatePhysics(true);
+	RootMesh->SetEnableGravity(true);
 }
 
 #pragma endregion

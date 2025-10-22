@@ -63,7 +63,20 @@ private:
 	UPROPERTY(VisibleAnywhere)
 	class USphereComponent* Sphere = nullptr;
 
+	UStaticMeshComponent* RootMesh = nullptr;
+	
 	UItemBehaviorRuntimeConfigBase* CachedRuntimeBehavior = nullptr;
 
+	/// <summary>
+	/// DO NOT directly set this variable. Do it via SetHolderPlayerInternal instead.
+	/// </summary>
 	AProlabCharacter* HolderPlayer = nullptr;
+
+#pragma region Internal
+	void InitializePhysicsAndCollision();
+	void SetHolderPlayerInternal(AProlabCharacter* NewHolder);
+	void OnPickup();
+	void OnRelease();
+#pragma endregion
+
 };
