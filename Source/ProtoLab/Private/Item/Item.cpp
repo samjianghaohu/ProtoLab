@@ -81,16 +81,21 @@ bool AItem::CanBeDropped(AProlabCharacter* Player)
 	return Player->GetHeldItem() == this;
 }
 
-void AItem::Drop(AProlabCharacter* Player)
+void AItem::Drop(const FVector InReleaseDirection, const float InReleaseSpeed)
 {
-	if (Player == nullptr)
+	if (HolderPlayer == nullptr)
 	{
 		return;
 	}
 
+	auto CachedHolder = HolderPlayer;
+
+	ReleaseDirection = InReleaseDirection;
+	ReleaseSpeed = InReleaseSpeed;
+
 	// Notify player and clear holder
 	SetHolderPlayerInternal(nullptr);
-	Player->SetHeldItem(nullptr);
+	CachedHolder->SetHeldItem(nullptr); // Access the holder via cache because HolderPlayer has already been cleared at this point.
 }
 
 #pragma endregion
@@ -213,6 +218,17 @@ void AItem::OnRelease()
 
 	RootMesh->SetSimulatePhysics(true);
 	RootMesh->SetEnableGravity(true);
+
+	// Apply release velocity if it's set.
+	FVector ReleaseVelocity = ReleaseDirection * ReleaseSpeed;
+	if (!ReleaseVelocity.IsNearlyZero())
+	{
+		RootMesh->SetPhysicsLinearVelocity(ReleaseVelocity);
+
+		// Reset release speed and direction.
+		ReleaseDirection = FVector::ZeroVector;
+		ReleaseSpeed = 0.0f;
+	}
 }
 
 #pragma endregion

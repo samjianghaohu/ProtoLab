@@ -54,7 +54,7 @@ void UPbcDropItemRuntime::Update()
 			auto InputValue = Dependencies->GetInputHandler()->GetInputActionValue(EPlayerInputType::EPIA_Drop);
 			if (InputValue.Get<bool>())
 			{
-				HeldItem->Drop(PlayerCharacter);
+				HeldItem->Drop();
 			}
 		}
 	}

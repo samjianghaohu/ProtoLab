@@ -17,14 +17,17 @@ class PROTOLAB_API UIbcThrow : public UItemBehaviorConfigBase
 public:
 #pragma region Configurable Fields
 
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = Input)
 	class UInputMappingContext* ThrowItemInputMapping = nullptr;
 
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = Animation)
 	class UAnimMontage* ThrowAnimation = nullptr;
 
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = Animation)
 	float ThrowAnimationPlayRate = 1.0f;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = Throw)
+	float ThrowReleaseSpeed = 0.0f;
 
 #pragma endregion
 

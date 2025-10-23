@@ -29,7 +29,7 @@ public:
 
 #pragma region Item Interface
 	virtual bool CanBeDropped(AProlabCharacter* Player);
-	void Drop(AProlabCharacter* Player);
+	void Drop(const FVector InReleaseDirection = FVector::ZeroVector, const float InReleaseSpeed = 0.0f);
 
 	FORCEINLINE UItemBehaviorConfigBase* GetItemBehaviorConfig() const { return InteractionSettings.ItemBehaviorConfig; }
 	FORCEINLINE void CacheRuntimeBehavior(UItemBehaviorRuntimeConfigBase* RuntimeBehavior) { CachedRuntimeBehavior = RuntimeBehavior; }
@@ -71,6 +71,10 @@ private:
 	/// DO NOT directly set this variable. Do it via SetHolderPlayerInternal instead.
 	/// </summary>
 	AProlabCharacter* HolderPlayer = nullptr;
+
+	FVector ReleaseDirection = FVector::ZeroVector;
+
+	float ReleaseSpeed = 0.0f;
 
 #pragma region Internal
 	void InitializePhysicsAndCollision();

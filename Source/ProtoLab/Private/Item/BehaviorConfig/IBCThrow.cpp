@@ -125,7 +125,8 @@ void UIbcThrowRuntime::OnThrowAnimationNotifyTriggered()
 	auto Item = Dependencies->GetItem();
 	auto HolderPlayer = Item->GetHolderPlayer();
 
-	Item->Drop(HolderPlayer);
+	auto ReleaseDirection = HolderPlayer->GetActorForwardVector(); // For simplicity, just use character forward as throw direction, we can do something more complicated later.
+	Item->Drop(ReleaseDirection, Config->ThrowReleaseSpeed);
 }
 
 #pragma endregion
