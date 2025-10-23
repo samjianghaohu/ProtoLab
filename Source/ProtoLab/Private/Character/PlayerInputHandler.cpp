@@ -54,9 +54,9 @@ FInputActionValue UPlayerInputHandler::GetInputActionValue(EPlayerInputType Inpu
 		return FInputActionValue();
 	}
 
-	if (CachedEnhancedInputComponent == nullptr)
+	if (!IsValid(CachedEnhancedInputComponent))
 	{
-		UE_LOG(LogTemp, Warning, TEXT("Enhanced input component is not cached! Did you call SetupPlayerInputComponent?"));
+		UE_LOG(LogTemp, Warning, TEXT("Enhanced input component is not valid! Did you call SetupPlayerInputComponent?"));
 		return FInputActionValue();
 	}
 

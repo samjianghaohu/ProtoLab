@@ -39,7 +39,7 @@ void UIbcThrowRuntime::CacheConfigFromConfigBase()
 	}
 
 	// TODO: Move the following logic to a OnEnable function or something.
-	if (Config->ThrowItemInputMapping != nullptr && PlayerController != nullptr)
+	if (Config->ThrowItemInputMapping != nullptr && IsValid(PlayerController))
 	{
 		if (UEnhancedInputLocalPlayerSubsystem* Subsystem = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(PlayerController->GetLocalPlayer()))
 		{
@@ -67,7 +67,7 @@ void UIbcThrowRuntime::Update()
 
 void UIbcThrowRuntime::Dispose()
 {
-	if (Config->ThrowItemInputMapping != nullptr && PlayerController != nullptr)
+	if (Config->ThrowItemInputMapping != nullptr && IsValid(PlayerController))
 	{
 		if (UEnhancedInputLocalPlayerSubsystem* Subsystem = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(PlayerController->GetLocalPlayer()))
 		{

@@ -3,3 +3,4 @@
 
 Content/Characters/** filter=lfs diff=lfs merge=lfs -text
 Content/LevelPrototyping/** filter=lfs diff=lfs merge=lfs -text
+Content/Weapons/** filter=lfs diff=lfs merge=lfs -text

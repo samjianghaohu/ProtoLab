@@ -32,6 +32,7 @@ protected:
 	class UPlayerInputConfigs* InputConfigs = nullptr;
 
 private:
+	UPROPERTY()
 	class UEnhancedInputComponent* CachedEnhancedInputComponent = nullptr;
 
 	// Keeps track of the correspondence of Input type enum and the actual input action,

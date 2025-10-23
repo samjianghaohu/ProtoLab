@@ -4,13 +4,13 @@
 
 #include "CoreMinimal.h"
 #include "Item/BehaviorConfig/ItemBehaviorConfigBase.h"
-#include "IBCThrow.generated.h"
+#include "IBCMeleeWeapon.generated.h"
 
 /**
- * Item behavior that lets the player throw the item with primary action.
+ * Item behavior shared among all melee weapons.
  */
 UCLASS()
-class PROTOLAB_API UIbcThrow : public UItemBehaviorConfigBase
+class PROTOLAB_API UIbcMeleeWeapon : public UItemBehaviorConfigBase
 {
 	GENERATED_BODY()
 
@@ -18,16 +18,16 @@ public:
 #pragma region Configurable Fields
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = Input)
-	class UInputMappingContext* ThrowItemInputMapping = nullptr;
+	class UInputMappingContext* MeleeWeaponInputMapping = nullptr;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = Animation)
-	class UAnimMontage* ThrowAnimation = nullptr;
+	class UAnimMontage* IdleAnimation = nullptr;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = Animation)
-	float ThrowAnimationPlayRate = 1.0f;
+	class UAnimMontage* SwingAnimation = nullptr;
 
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = Throw)
-	float ThrowReleaseSpeed = 0.0f;
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = Animation)
+	float SwingAnimationPlayRate = 1.0f;
 
 #pragma endregion
 
@@ -35,7 +35,7 @@ public:
 };
 
 UCLASS()
-class PROTOLAB_API UIbcThrowRuntime : public UItemBehaviorRuntimeConfigBase
+class PROTOLAB_API UIbcMeleeWeaponRuntime : public UItemBehaviorRuntimeConfigBase
 {
 	GENERATED_BODY()
 
@@ -46,15 +46,14 @@ public:
 
 private:
 	UPROPERTY()
-	UIbcThrow* Config = nullptr;
+	UIbcMeleeWeapon* Config = nullptr;
 
 	UPROPERTY()
 	class APlayerController* PlayerController = nullptr;
 
-	bool bIsThrowAnimPlaying = false;
+	bool bIsSwingAnimationPlaying = false;
 
-	bool CanHeldItemBeThrown();
+	void PlaySwingAnimation();
 
-	void PlayThrowAnimation();
-	void OnThrowAnimationNotifyTriggered();
+	void OnSwingAnimationNotifyTriggered();
 };
