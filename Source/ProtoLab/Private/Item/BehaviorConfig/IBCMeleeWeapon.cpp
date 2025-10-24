@@ -6,6 +6,7 @@
 #include "Item/Item.h"
 #include "Character/ProlabCharacter.h"
 #include "Character/PlayerInputHandler.h"
+#include "Character/PlayerAnimInstance.h"
 #include "Animation/AnimNotifyWithDelegates.h"
 #include "EnhancedInputSubsystems.h"
 
@@ -35,14 +36,21 @@ void UIbcMeleeWeaponRuntime::CacheConfigFromConfigBase()
 	{
 		PlayerController = Cast<APlayerController>(HolderPlayer->GetController());
 	}
+}
 
-	// TODO: Move the following logic to a OnEnable function or something.
+void UIbcMeleeWeaponRuntime::OnEnable()
+{
 	if (Config->MeleeWeaponInputMapping != nullptr && IsValid(PlayerController))
 	{
 		if (UEnhancedInputLocalPlayerSubsystem* Subsystem = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(PlayerController->GetLocalPlayer()))
 		{
 			Subsystem->AddMappingContext(Config->MeleeWeaponInputMapping, 2); // Make a priority enum for behavior inputs
 		}
+	}
+
+	if (Config->IdleAnimation != nullptr)
+	{
+		Dependencies->GetPlayerAnimation()->AddIdleAnimOverride(Config->IdleAnimation);
 	}
 
 	bIsSwingAnimationPlaying = false;
@@ -65,6 +73,11 @@ void UIbcMeleeWeaponRuntime::Update()
 
 void UIbcMeleeWeaponRuntime::Dispose()
 {
+	if (Config->IdleAnimation != nullptr)
+	{
+		Dependencies->GetPlayerAnimation()->RemoveIdleAnimaOverride();
+	}
+
 	if (Config->MeleeWeaponInputMapping != nullptr && IsValid(PlayerController))
 	{
 		if (UEnhancedInputLocalPlayerSubsystem* Subsystem = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(PlayerController->GetLocalPlayer()))

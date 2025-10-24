@@ -2,9 +2,21 @@
 
 
 #include "Item/BehaviorConfig/ItemBehaviorDependencies.h"
+#include "Character/ProlabCharacter.h"
+#include "Character/PlayerAnimInstance.h"
 
-void UItemBehaviorDependencies::Initialize(AItem* InItem, UPlayerInputHandler* InInputHandler)
+void UItemBehaviorDependencies::Initialize(AItem* InItem, AProlabCharacter* LocalPlayer)
 {
 	Item = InItem;
-	InputHandler = InInputHandler;
+
+	if (LocalPlayer != nullptr)
+	{
+		InputHandler = LocalPlayer->GetInputHandler();
+
+		auto PlayerMesh = LocalPlayer->GetMesh();
+		if (PlayerMesh != nullptr)
+		{
+			PlayerAnimation = Cast<UPlayerAnimInstance>(PlayerMesh->GetAnimInstance());
+		}
+	}
 }

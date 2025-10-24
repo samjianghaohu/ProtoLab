@@ -23,4 +23,6 @@ void UItemBehaviorRuntimeConfigBase::Initialize(UItemBehaviorConfigBase* InConfi
 	ConfigBase = InConfigBase;
 
 	CacheConfigFromConfigBase();
+
+	OnEnable();
 }

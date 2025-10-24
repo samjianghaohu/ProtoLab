@@ -21,7 +21,7 @@ public:
 	class UInputMappingContext* MeleeWeaponInputMapping = nullptr;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = Animation)
-	class UAnimMontage* IdleAnimation = nullptr;
+	class UAnimSequence* IdleAnimation = nullptr;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = Animation)
 	class UAnimMontage* SwingAnimation = nullptr;
@@ -41,6 +41,7 @@ class PROTOLAB_API UIbcMeleeWeaponRuntime : public UItemBehaviorRuntimeConfigBas
 
 public:
 	virtual void CacheConfigFromConfigBase() override;
+	virtual void OnEnable() override;
 	virtual void Update() override;
 	virtual void Dispose() override;
 

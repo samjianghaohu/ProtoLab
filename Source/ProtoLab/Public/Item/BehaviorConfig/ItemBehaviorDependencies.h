@@ -7,7 +7,9 @@
 #include "ItemBehaviorDependencies.generated.h"
 
 class AItem;
+class AProlabCharacter;
 class UPlayerInputHandler;
+class UPlayerAnimInstance;
 
 /**
  * Dependencies class containing references needed by item behavior runtime logic.
@@ -18,15 +20,21 @@ class PROTOLAB_API UItemBehaviorDependencies : public UObject
 	GENERATED_BODY()
 
 public:
-	void Initialize(AItem* InItem, UPlayerInputHandler* InInputHandler);
+	void Initialize(AItem* InItem, AProlabCharacter* LocalPlayer);
 
 	FORCEINLINE AItem* GetItem() const { return Item; }
 
 	FORCEINLINE UPlayerInputHandler* GetInputHandler() const { return InputHandler; }
 
+	FORCEINLINE UPlayerAnimInstance* GetPlayerAnimation() const { return PlayerAnimation; }
+
 private:
+	UPROPERTY()
 	AItem* Item = nullptr;
 
+	UPROPERTY()
 	UPlayerInputHandler* InputHandler = nullptr;
 
+	UPROPERTY()
+	UPlayerAnimInstance* PlayerAnimation = nullptr;
 };

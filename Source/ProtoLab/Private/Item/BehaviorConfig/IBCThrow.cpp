@@ -37,8 +37,10 @@ void UIbcThrowRuntime::CacheConfigFromConfigBase()
 	{
 		PlayerController = Cast<APlayerController>(HolderPlayer->GetController());
 	}
+}
 
-	// TODO: Move the following logic to a OnEnable function or something.
+void UIbcThrowRuntime::OnEnable()
+{
 	if (Config->ThrowItemInputMapping != nullptr && IsValid(PlayerController))
 	{
 		if (UEnhancedInputLocalPlayerSubsystem* Subsystem = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(PlayerController->GetLocalPlayer()))

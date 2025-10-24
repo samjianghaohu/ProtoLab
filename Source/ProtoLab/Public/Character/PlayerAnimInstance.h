@@ -7,7 +7,7 @@
 #include "PlayerAnimInstance.generated.h"
 
 /**
- * 
+ * Defines custom behavior of player animation and exposes relevant properties.
  */
 UCLASS()
 class PROTOLAB_API UPlayerAnimInstance : public UAnimInstance
@@ -24,9 +24,19 @@ public:
 	UPROPERTY(BlueprintReadOnly, Category = Movement)
 	bool bIsFalling;
 
+	UPROPERTY(BlueprintReadOnly, Category = "Animation Override")
+	bool bHasIdleAnimOverride = false;
+
+	UPROPERTY(BlueprintReadOnly, Category = "Animation Override")
+	class UAnimSequence* IdleAnimOverride = nullptr;
+
 	virtual void NativeInitializeAnimation() override;
 
 	virtual void NativeUpdateAnimation(float DeltaSeconds) override;
+
+	void AddIdleAnimOverride(UAnimSequence* AnimOverride);
+
+	void RemoveIdleAnimaOverride();
 
 private:
 	UPROPERTY(VisibleAnywhere)

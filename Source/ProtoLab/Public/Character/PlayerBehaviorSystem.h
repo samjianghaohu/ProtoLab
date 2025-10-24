@@ -42,10 +42,13 @@ private:
 	UPROPERTY(VisibleAnywhere, Category = Behavior)
 	TArray<class UItemBehaviorRuntimeConfigBase*> ItemRuntimeConfigs;
 
+	UPROPERTY()
 	class UPlayerBehaviorDependencies* PlayerBehaviorDependencies = nullptr;
 
+	UPROPERTY()
 	class AProlabCharacter* Player = nullptr;
 
+	UPROPERTY()
 	UItemBehaviorConfigBase* DefaultItemBehaviorConfig = nullptr;
 
 	void UpdateGlobalBehaviors(float DeltaTime);

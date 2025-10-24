@@ -36,6 +36,8 @@ class PROTOLAB_API UItemBehaviorRuntimeConfigBase : public UObject
 public:
 	virtual void Initialize(UItemBehaviorConfigBase* InConfigBase, UItemBehaviorDependencies* InBehaviorDependencies);
 
+	virtual void OnEnable() PURE_VIRTUAL(UItemBehaviorRuntimeConfigBase::OnEnable)
+
 	virtual void Update() PURE_VIRTUAL(UItemBehaviorRuntimeConfigBase::Update)
 
 	virtual void Dispose() PURE_VIRTUAL(UItemBehaviorRuntimeConfigBase::Dispose)

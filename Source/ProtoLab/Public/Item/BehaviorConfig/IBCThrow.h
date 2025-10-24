@@ -41,6 +41,7 @@ class PROTOLAB_API UIbcThrowRuntime : public UItemBehaviorRuntimeConfigBase
 
 public:
 	virtual void CacheConfigFromConfigBase() override;
+	virtual void OnEnable() override;
 	virtual void Update() override;
 	virtual void Dispose() override;
 
@@ -54,7 +55,6 @@ private:
 	bool bIsThrowAnimPlaying = false;
 
 	bool CanHeldItemBeThrown();
-
 	void PlayThrowAnimation();
 	void OnThrowAnimationNotifyTriggered();
 };

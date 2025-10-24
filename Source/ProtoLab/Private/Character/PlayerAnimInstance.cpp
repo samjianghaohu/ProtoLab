@@ -31,3 +31,16 @@ void UPlayerAnimInstance::NativeUpdateAnimation(float DeltaSeconds)
 		GroundSpeed = ProjectedVelocityWs.Size();
 	}
 }
+
+// TODO: Consider making this into a prioritized token map so that multiple systems can use it at the same time
+void UPlayerAnimInstance::AddIdleAnimOverride(UAnimSequence* AnimOverride)
+{
+	IdleAnimOverride = AnimOverride;
+	bHasIdleAnimOverride = IsValid(IdleAnimOverride);
+}
+
+void UPlayerAnimInstance::RemoveIdleAnimaOverride()
+{
+	bHasIdleAnimOverride = false;
+	IdleAnimOverride = nullptr; // TODO: Wait until blend out is finished before removing override anim reference.
+}

@@ -117,15 +117,8 @@ void UPlayerBehaviorSystem::AddItemBehaviorConfig(AItem* Item)
 		return;
 	}
 
-	auto InputHandler = Player->GetInputHandler();
-	if (InputHandler == nullptr)
-	{
-		UE_LOG(LogTemp, Error, TEXT("UPlayerBehaviorSystem::AddItemBehaviorConfig - Player has no InputHandler. Something is wrong."));
-		return;
-	}
-
 	auto Dependencies = NewObject<UItemBehaviorDependencies>(this);
-	Dependencies->Initialize(Item, InputHandler);
+	Dependencies->Initialize(Item, Player);
 
 	auto Runtime = NewConfig->InitializeRuntime(Dependencies);
 	if (Runtime)
