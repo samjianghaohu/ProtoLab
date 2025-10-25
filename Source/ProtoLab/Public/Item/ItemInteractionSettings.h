@@ -11,4 +11,7 @@ struct FItemInteractionSettings
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	class UItemBehaviorConfigBase* ItemBehaviorConfig;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	FName AttachSocketName;
 };

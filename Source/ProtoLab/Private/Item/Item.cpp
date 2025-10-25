@@ -191,7 +191,7 @@ void AItem::OnPickup()
 
 	// Attach to player
 	FAttachmentTransformRules AttachmentRules(EAttachmentRule::SnapToTarget, true);
-	GetRootComponent()->AttachToComponent(HolderPlayer->GetMesh(), FAttachmentTransformRules::SnapToTargetNotIncludingScale, TEXT("HandGrip_R"));
+	GetRootComponent()->AttachToComponent(HolderPlayer->GetMesh(), FAttachmentTransformRules::SnapToTargetNotIncludingScale, InteractionSettings.AttachSocketName);
 
 	// Initialize item behavior.
 	auto BehaviorSystem = HolderPlayer->GetBehaviorSystem();
