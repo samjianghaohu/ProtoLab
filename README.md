@@ -16,7 +16,19 @@ The system allows developers to define player capabilities and object behaviors 
 > ⚠️ *Work-in-progress*: The core architecture of these key features are complete and they are capable of realizing simple game interactions. Future updates and refactor will be made to these systems to support more complicated behaviors.
 
 ## Tech Details
-TBA
+### Player Behavior Config Class Setup:
+
+<img width="781" height="601" alt="PlayerBehaviorClasses" src="https://github.com/user-attachments/assets/a5686041-05ea-4ea7-8661-15ad6dcf8fa8" />
+
+An example setup for Interacting with Interactables player behavior:
+
+<img width="761" height="740" alt="PlayerBehaviorClassExample" src="https://github.com/user-attachments/assets/2512de02-7297-4337-92ba-fae19b964d71" />
+
+### Item Behavior Config Class Setup:
+
+Item Behavior Config Classes are very identical to Player Behavior Config classes. The major differences are in what object references does the Dependencies class holds, and when the behaviors are initialized and disposed.
+
+
 
 ## Roadmap
 TBA
