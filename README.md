@@ -28,7 +28,11 @@ An example setup for Interacting with Interactables player behavior:
 
 Item Behavior Config Classes are very identical to Player Behavior Config classes. The major differences are in what object references does the Dependencies class holds, and when the behaviors are initialized and disposed.
 
+### Player and Behavior System Setup:
 
+<img width="841" height="1201" alt="PlayerSystemSetup" src="https://github.com/user-attachments/assets/241ee756-9c47-40b0-a446-42414affb033" />
+
+> ⚠️ *Work-in-progress*: Disposing logic for Global Player Behavior still needs to be implemented. Future improvements such as behavior states and priority will also be made as the project expands.
 
 ## Roadmap
 TBA
