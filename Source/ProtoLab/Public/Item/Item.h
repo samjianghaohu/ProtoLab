@@ -63,8 +63,10 @@ private:
 	UPROPERTY(VisibleAnywhere)
 	class USphereComponent* Sphere = nullptr;
 
+	UPROPERTY()
 	UStaticMeshComponent* RootMesh = nullptr;
 	
+	UPROPERTY()
 	UItemBehaviorRuntimeConfigBase* CachedRuntimeBehavior = nullptr;
 
 	/// <summary>

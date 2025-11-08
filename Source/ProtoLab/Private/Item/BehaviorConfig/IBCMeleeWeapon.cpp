@@ -4,6 +4,7 @@
 #include "Item/BehaviorConfig/IBCMeleeWeapon.h"
 #include "Item/BehaviorConfig/ItemBehaviorDependencies.h"
 #include "Item/Item.h"
+#include "Item/Weapon/MeleeWeapon.h"
 #include "Character/ProlabCharacter.h"
 #include "Character/PlayerInputHandler.h"
 #include "Character/PlayerAnimInstance.h"
@@ -35,6 +36,15 @@ void UIbcMeleeWeaponRuntime::CacheConfigFromConfigBase()
 	if (HolderPlayer != nullptr)
 	{
 		PlayerController = Cast<APlayerController>(HolderPlayer->GetController());
+	}
+
+	auto ItemAsMeleeWeapon = Cast<AMeleeWeapon>(Dependencies->GetItem());
+	MeleeWeapon = ItemAsMeleeWeapon;
+
+	if (MeleeWeapon == nullptr)
+	{
+		UE_LOG(LogTemp, Error, TEXT("MeleeWeaponBehavior might be configured on a non-melee-weapon. Is this intended?"));
+		return;
 	}
 }
 
@@ -102,6 +112,11 @@ void UIbcMeleeWeaponRuntime::PlaySwingAnimation()
 		}
 
 		HolderPlayer->PlayAnimMontage(Config->SwingAnimation, Config->SwingAnimationPlayRate);
+
+		if (MeleeWeapon != nullptr)
+		{
+			MeleeWeapon->StartSwinging();
+		}
 	}
 }
 
@@ -117,6 +132,11 @@ void UIbcMeleeWeaponRuntime::OnSwingAnimationNotifyTriggered()
 	}
 
 	bIsSwingAnimationPlaying = false;
+
+	if (MeleeWeapon != nullptr)
+	{
+		MeleeWeapon->EndSwinging();
+	}
 }
 
 #pragma endregion

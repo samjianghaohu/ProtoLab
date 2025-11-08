@@ -52,6 +52,9 @@ private:
 	UPROPERTY()
 	class APlayerController* PlayerController = nullptr;
 
+	UPROPERTY()
+	class AMeleeWeapon* MeleeWeapon = nullptr;
+
 	bool bIsSwingAnimationPlaying = false;
 
 	void PlaySwingAnimation();
